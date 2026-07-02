@@ -1,0 +1,214 @@
+HTML
+
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solicitari si Program Colegi TVR</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7f6; color: #333; margin: 0; padding: 20px; display: flex; justify-content: center; }
+        .container-colegi { background: #ffffff; border: 1px solid #e0e0e0; border-top: 6px solid #2cbd7b; padding: 30px; border-radius: 12px; box-shadow: 0 6px 18px rgba(0,0,0,0.06); width: 100%; max-width: 650px; box-sizing: border-box; }
+        h2 { color: #2cbd7b; margin-top: 0; margin-bottom: 8px; font-size: 22px; display: flex; align-items: center; gap: 10px; }
+        .subtitle { font-size: 14px; color: #666; margin-bottom: 20px; }
+        .instructions-colegi { font-size: 13px; color: #2c664d; background: #ebf9f2; padding: 12px 15px; border-radius: 8px; margin-bottom: 25px; border-left: 4px solid #2cbd7b; line-height: 1.4; }
+        .form-group { margin-bottom: 20px; }
+        label { display: block; font-weight: 600; margin-bottom: 8px; color: #444; font-size: 14px; }
+        input[type="text"], input[type="date"], select, textarea { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 8px; box-sizing: border-box; font-size: 14px; background-color: #fff; font-family: inherit; transition: border-color 0.2s; }
+        input:focus, select:focus, textarea:focus { border-color: #2cbd7b; outline: none; }
+        textarea { height: 90px; resize: none; }
+        .row { display: flex; gap: 15px; margin-bottom: 5px; }
+        .col { flex: 1; }
+        .radio-group { display: flex; gap: 20px; margin-bottom: 10px; padding: 5px 0; }
+        .radio-option { display: flex; align-items: center; gap: 6px; font-size: 14px; font-weight: 600; cursor: pointer; }
+        .radio-option input { cursor: pointer; scale: 1.2; }
+        .btn-link { color: white; border: none; padding: 14px 20px; font-size: 16px; font-weight: bold; border-radius: 8px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none; text-align: center; width: 100%; background-color: #2cbd7b; box-sizing: border-box; transition: background-color 0.2s, transform 0.1s; box-shadow: 0 4px 12px rgba(44, 189, 123, 0.2); }
+        .btn-link:hover { background-color: #219662; }
+        .btn-link:active { transform: scale(0.99); }
+        .footer-credit { text-align: center; margin-top: 25px; font-size: 11px; color: #999; border-top: 1px solid #eee; padding-top: 15px; }
+    </style>
+</head>
+<body>
+
+<div class="container-colegi">
+    <h2>🏖️ Solicitări Personal — TVR</h2>
+    <div class="subtitle">Modul de transmitere rapidă pentru Zile Libere, Concedii și Preferințe de Tură</div>
+    
+    <div class="instructions-colegi">
+        💡 <b>Cum funcționează:</b> Alege cui trimiți solicitarea, selectează-ți meseria și numele din listă, completează detaliile și apasă butonul verde pentru a trimite direct pe WhatsApp.
+    </div>
+
+    <div class="form-group">
+        <label>🎯 Trimite solicitarea către:</label>
+        <select id="coleg-destinatar" onchange="updateColegLink()">
+            <option value="40745905815">MARIUS NECHITA (0745 905 815)</option>
+            <option value="40766253906">MIHAELA GHIOCEL (0766 253 906)</option>
+        </select>
+    </div>
+
+    <div class="row">
+        <div class="col">
+            <label>🛠️ Funcție / Meserie:</label>
+            <select id="coleg-functie" onchange="schimbaMeserie()">
+                <option value="">-- Selectează Meseria --</option>
+                <option value="operatori">🎥 Operatori</option>
+                <option value="asistenti">⚙️ Asistenți TV</option>
+                <option value="sunetisti">🎙️ Sunetiști</option>
+            </select>
+        </div>
+        <div class="col">
+            <label>👤 Numele tău:</label>
+            <select id="coleg-nume" onchange="updateColegLink()" disabled>
+                <option value="">-- Alege mai întâi meseria --</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="form-group" style="margin-top: 15px;">
+        <label>⚙️ Tipul solicitării:</label>
+        <select id="coleg-optiune" onchange="updateColegLink()">
+            <option value="Zi Liberă">🔓 Zi Liberă</option>
+            <option value="Concediu de Odihnă (CO)">🏖️ Concediu de Odihnă</option>
+            <option value="Concediu Medical (CM)">🤒 Concediu Medical</option>
+            <option value="Doresc tură de DIMINEAȚĂ">☀️ Vreau tură DIMINEAȚĂ</option>
+            <option value="Doresc tură de DUPĂ-MASĂ">🌙 Vreau tură DUPĂ-MASĂ</option>
+            <option value="Alta solicitare">✍️ Altceva (Detalii mai jos)</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label>📅 Format dată:</label>
+        <div class="radio-group">
+            <label class="radio-option">
+                <input type="radio" name="tip-data" value="singura" checked onchange="comutaTipData()"> O singură zi
+            </label>
+            <label class="radio-option">
+                <input type="radio" name="tip-data" value="perioada" onchange="comutaTipData()"> Perioadă (Zile consecutive)
+            </label>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col">
+            <label id="label-data-start">📅 Data:</label>
+            <input type="date" id="coleg-data-start" onchange="updateColegLink()">
+        </div>
+        <div class="col" id="container-data-sfarsit" style="display: none;">
+            <label>📅 Până la data de:</label>
+            <input type="date" id="coleg-data-sfarsit" onchange="updateColegLink()">
+        </div>
+    </div>
+
+    <div class="form-group" style="margin-top: 20px;">
+        <label>💬 Detalii suplimentare:</label>
+        <textarea id="coleg-detalii" placeholder="Scrie aici detalii dacă este cazul (ex: Schimb de tură cu colegul X, motiv personal etc.)..." oninput="updateColegLink()"></textarea>
+    </div>
+
+    <a href="#" id="coleg-whatsapp-link" target="_blank" class="btn-link">
+        🟢 Trimite Solicitarea pe WhatsApp Privat
+    </a>
+    
+    <div class="footer-credit">
+        Televiziunea Română • Asistență Dispecerat Programe
+    </div>
+</div>
+
+<script>
+const bazeDate = {
+    operatori: ["Andrei Silviu", "Borta Gabriel", "Buzura Mihai", "Chiriac Razvan", "Cioaba Radu", "Corut Andrei", "Costea Mihai", "Covrig Mihai", "Demeterca Eugen", "Dumitru Florinel", "Ene Iulica", "Florea Mihai", "Gavrila Marius", "Gheorghe Dan", "Ghiocel Mihaela", "Iacovescu Doru", "Ionita Florin", "Iorga Alexandru", "Iovanescu Amilcar", "Margarint Dinu", "Micu Vlad", "Milescu Dragos", "Miricioiu Florin", "Nechita Marius", "Oprea Marian", "Paduraru George", "Patrascu Mihai", "Petringenaru Claudiu", "Popescu Viorel", "Radu Adrian", "Rona Constantin", "Stan Stefan", "Stoian Dan", "Stoica Cristian", "Szilagyi Rudolf","Tigoianu Remus", "Trifu Constantin"].sort(),
+    asistenti: ["Catrina Cristian", "Ciolan Valentin", "Clopot Marian Danut", "Dinca Gheorghe", "Ditiu George", "Maranca Adrian", "Marinescu Aurel", "Rauta Lucian", "Stoica Grigorut", "Stroe Sorinel", "Tanase Dragos", "ILUMINARE"].sort(),
+    sunetisti: ["Bartolomeu Valentin", "Istrate Sergiu", "Paraschivescu Radu", "Pavel Madalin Serban", "Petreanu Cristian", "Popescu Ionut","Putinianu Catalin", "Sandu George", "Stanciu Marius", "Tranc Liviu Stefan", "MICROFON"].sort()
+};
+
+function schimbaMeserie() {
+    const functie = document.getElementById('coleg-functie').value;
+    const numeSelect = document.getElementById('coleg-nume');
+    
+    numeSelect.innerHTML = '';
+    
+    if (!functie) {
+        numeSelect.innerHTML = '<option value="">-- Alege mai întâi meseria --</option>';
+        numeSelect.disabled = true;
+        updateColegLink();
+        return;
+    }
+    
+    numeSelect.disabled = false;
+    const optiuni = bazeDate[functie];
+    
+    const optImplicit = document.createElement('option');
+    optImplicit.value = "";
+    optImplicit.innerText = "-- Selectează numele tău --";
+    numeSelect.appendChild(optImplicit);
+    
+    optiuni.forEach(nume => {
+        const opt = document.createElement('option');
+        opt.value = nume;
+        opt.innerText = nume;
+        numeSelect.appendChild(opt);
+    });
+    
+    updateColegLink();
+}
+
+function comutaTipData() {
+    const tipData = document.querySelector('input[name="tip-data"]:checked').value;
+    const containerSfarsit = document.getElementById('container-data-sfarsit');
+    const labelStart = document.getElementById('label-data-start');
+    
+    if (tipData === 'perioada') {
+        containerSfarsit.style.display = 'block';
+        labelStart.innerText = "📅 Din data de:";
+    } else {
+        containerSfarsit.style.display = 'none';
+        labelStart.innerText = "📅 Data:";
+    }
+    updateColegLink();
+}
+
+function formatareDataRO(dataBruta) {
+    if (!dataBruta) return "—";
+    const parti = dataBruta.split('-');
+    return `${parti[2]}.${parti[1]}.${parti[0]}`;
+}
+
+function updateColegLink() {
+    const destinatarNumar = document.getElementById('coleg-destinatar').value;
+    const nume = document.getElementById('coleg-nume').value;
+    const optiune = document.getElementById('coleg-optiune').value;
+    const tipData = document.querySelector('input[name="tip-data"]:checked').value;
+    const dataStart = document.getElementById('coleg-data-start').value;
+    const dataSfarsit = document.getElementById('coleg-data-sfarsit').value;
+    const detalii = document.getElementById('coleg-detalii').value.trim();
+
+    if (!nume) {
+        document.getElementById('coleg-whatsapp-link').href = "#";
+        return;
+    }
+
+    let textData = formatareDataRO(dataStart);
+    if (tipData === 'perioada') {
+        textData = `Din ${formatareDataRO(dataStart)} până în ${formatareDataRO(dataSfarsit)}`;
+    }
+
+    let mesajCerere = `⚠️ *SOLICITARE PERSONAL — TVR*%0A%0A` +
+                      `👤 *Angajat:* ${nume}%0A` +
+                      `📅 *Data:* ${textData}%0A` +
+                      `⚙️ *Tip cerere:* ${optiune}`;
+    
+    if (detalii) {
+        mesajCerere += `%0A%0A💬 *Detalii:* ${detalii}`;
+    }
+
+    document.getElementById('coleg-whatsapp-link').href = `https://api.whatsapp.com/send?phone=${destinatarNumar}&text=${mesajCerere}`;
+}
+
+window.onload = function() {
+    const azi = new Date().toISOString().split('T')[0];
+    document.getElementById('coleg-data-start').value = azi;
+    document.getElementById('coleg-data-sfarsit').value = azi;
+    updateColegLink();
+};
+</script>
+</body>
+</html>
